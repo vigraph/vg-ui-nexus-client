@@ -14,7 +14,7 @@ This is a React+TypeScript Web app built with [Create React App](https://create-
 
 You'll need npm installed, of course (`sudo apt install npm`) but it will take care of the rest!
 
-By default the Web app will connect to http://localhost:33480 which is the default REST interface port provided by the local ViGraph Nexus server on the same machine.  If you want to connect to another server, you can change the URL in `src/json/config.json`.
+By default the Web app will connect to http://localhost:33480 which is the default REST interface port provided by the local ViGraph Nexus server on the same machine.  If you want to connect to another server, you can change the URL in `src/config.json`.
 
 ## Contributions
 

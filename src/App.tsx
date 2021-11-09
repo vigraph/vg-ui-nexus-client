@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createMuiTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 
@@ -34,19 +34,34 @@ const useStyles = makeStyles({
   logo: {
     height: '40px'
   },
-
-  wordmark: {
-    display: 'inline-block',
-    float: 'right',
-    height: '24px',
-    marginTop: '8px'
-  },
 });
 
 // Main app
 const App: React.FunctionComponent = () =>
   {
     const classes = useStyles();
+    const webSocket = useRef(null as WebSocket | null);
+
+    // Start the websocket
+    useEffect( () => {
+      function join()
+      {
+        const json = { type: "join" };
+        webSocket.current && webSocket.current.send(JSON.stringify(json));
+      }
+
+      const _ws = new WebSocket(config.nexusURL);
+      _ws.onopen = join;
+
+      webSocket.current = _ws;
+//      this.webSocket.onmessage =
+      //        (e: MessageEvent) => { this.handleFrame(e.data); };
+
+      // Cleanup function
+      return () => {
+        _ws.close();
+      };
+    }, []);
 
     return (
       <ThemeProvider theme={theme}>
