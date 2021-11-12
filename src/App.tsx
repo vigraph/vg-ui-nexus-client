@@ -3,6 +3,7 @@ import { createMuiTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import QueueInfo from './QueueInfo';
+import Controls from './Controls';
 
 import icon from './graphics/header-icon.svg';
 import config from './config.json';
@@ -63,22 +64,22 @@ const App: React.FunctionComponent = () =>
         switch (json.type)
         {
           case "qinfo":
-            setQueueState("waiting");
-            setQueuePosition(json.position);
-            setQueueTime(json.time);
+          setQueueState("waiting");
+          setQueuePosition(json.position);
+          setQueueTime(json.time);
           break;
 
           case "active":
-            setQueueState("active");
-            setQueueTime(json.time);
+          setQueueState("active");
+          setQueueTime(json.time);
           break;
 
           case "timeup":
-            setQueueState("timeup");
+          setQueueState("timeup");
           break;
 
           default:
-            console.log("Unrecognised Nexus message "+json.type);
+          console.log("Unrecognised Nexus message "+json.type);
         }
       }
       catch (e)
@@ -100,6 +101,7 @@ const App: React.FunctionComponent = () =>
       const ws = new WebSocket(config.nexusURL);
       ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
       ws.onerror = () => { setTimeout(start_ws, 1000); };
+      ws.onclose = () => { setTimeout(start_ws, 1000); };
       webSocket.current = ws;
     }
 
@@ -123,6 +125,9 @@ const App: React.FunctionComponent = () =>
               Join
             </Button>
           </header>
+          { queueState === "active" && webSocket.current &&
+            <Controls webSocket={webSocket.current}/>
+          }
         </div>
       </ThemeProvider>
     );
