@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createMuiTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import QueueInfo from './QueueInfo';
 
 import icon from './graphics/header-icon.svg';
 import config from './config.json';
@@ -34,6 +36,12 @@ const useStyles = makeStyles({
   logo: {
     height: '40px'
   },
+
+  join: {
+    position: 'absolute',
+    left: '50px',
+    top: '10px'
+  },
 });
 
 // Main app
@@ -41,21 +49,57 @@ const App: React.FunctionComponent = () =>
   {
     const classes = useStyles();
     const webSocket = useRef(null as WebSocket | null);
+    const [queuePosition, setQueuePosition] = useState(0);
+    const [queueState, setQueueState] = useState("idle");
+    const [queueTime, setQueueTime] = useState(0);
+
+    // Handle an inbound message
+    function handleMessage(msg: string)
+    {
+      console.log("Got WS msg: "+msg);
+      try
+      {
+        const json = JSON.parse(msg);
+        switch (json.type)
+        {
+          case "qinfo":
+          setQueueState("waiting");
+          setQueuePosition(json.position);
+          setQueueTime(json.time);
+          break;
+
+          case "active":
+          setQueueState("active");
+          setQueueTime(json.time);
+          break;
+
+          case "timeup":
+          setQueueState("timeup");
+          break;
+
+          default:
+          console.log("Unrecognised Nexus message "+json.type);
+        }
+      }
+      catch (e)
+      {
+        console.log("Bad JSON");
+      }
+    }
+
+    // Join the queue
+    function join()
+    {
+      const json = { type: "join" };
+      webSocket.current && webSocket.current.send(JSON.stringify(json));
+    }
 
     // Start the websocket
     useEffect( () => {
-      function join()
-      {
-        const json = { type: "join" };
-        webSocket.current && webSocket.current.send(JSON.stringify(json));
-      }
-
       const _ws = new WebSocket(config.nexusURL);
-      _ws.onopen = join;
+      _ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
 
       webSocket.current = _ws;
-//      this.webSocket.onmessage =
-      //        (e: MessageEvent) => { this.handleFrame(e.data); };
 
       // Cleanup function
       return () => {
@@ -69,6 +113,12 @@ const App: React.FunctionComponent = () =>
           <header className={classes.header}>
             <img src={icon} aria-label='Nexus icon'
                  className={classes.logo} alt="" />
+            <QueueInfo state={queueState} position={queuePosition}
+                       time={queueTime} />
+            <Button className={classes.join} variant="contained"
+                    color="primary" onClick={join}>
+              Join
+            </Button>
           </header>
         </div>
       </ThemeProvider>
