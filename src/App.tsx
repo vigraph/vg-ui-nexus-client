@@ -63,22 +63,22 @@ const App: React.FunctionComponent = () =>
         switch (json.type)
         {
           case "qinfo":
-          setQueueState("waiting");
-          setQueuePosition(json.position);
-          setQueueTime(json.time);
+            setQueueState("waiting");
+            setQueuePosition(json.position);
+            setQueueTime(json.time);
           break;
 
           case "active":
-          setQueueState("active");
-          setQueueTime(json.time);
+            setQueueState("active");
+            setQueueTime(json.time);
           break;
 
           case "timeup":
-          setQueueState("timeup");
+            setQueueState("timeup");
           break;
 
           default:
-          console.log("Unrecognised Nexus message "+json.type);
+            console.log("Unrecognised Nexus message "+json.type);
         }
       }
       catch (e)
@@ -95,15 +95,18 @@ const App: React.FunctionComponent = () =>
     }
 
     // Start the websocket
+    function start_ws()
+    {
+      const ws = new WebSocket(config.nexusURL);
+      ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
+      ws.onerror = () => { setTimeout(start_ws, 1000); };
+      webSocket.current = ws;
+    }
+
     useEffect( () => {
-      const _ws = new WebSocket(config.nexusURL);
-      _ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
-
-      webSocket.current = _ws;
-
-      // Cleanup function
+      start_ws();
       return () => {
-        _ws.close();
+        webSocket.current && webSocket.current.close();
       };
     }, []);
 
