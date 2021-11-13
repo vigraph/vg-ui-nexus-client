@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
   join: {
     position: 'absolute',
-    left: '50px',
+    right: '10px',
     top: '10px'
   },
 });
@@ -75,7 +75,7 @@ const App: React.FunctionComponent = () =>
           break;
 
           case "timeup":
-          setQueueState("timeup");
+          setQueueState("idle");
           break;
 
           default:
@@ -120,10 +120,13 @@ const App: React.FunctionComponent = () =>
                  className={classes.logo} alt="" />
             <QueueInfo state={queueState} position={queuePosition}
                        time={queueTime} />
-            <Button className={classes.join} variant="contained"
-                    color="primary" onClick={join}>
-              Join
-            </Button>
+            {
+              queueState === "idle" &&
+              <Button className={classes.join} variant="contained"
+                      color="primary" onClick={join}>
+                Join
+              </Button>
+            }
           </header>
           { queueState === "active" && webSocket.current &&
             <Controls webSocket={webSocket.current}/>

@@ -4,11 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 // Explicit styles
 const useStyles = makeStyles({
   queueInfo: {
-    width: '80vw',
     position: 'absolute',
     right: '10px',
     top: '8px',
-    fontSize: '30px'
+    fontSize: '5vw'
   },
 });
 

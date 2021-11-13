@@ -9,6 +9,10 @@ const useStyles = makeStyles({
     fontSize: "24px",
     padding: "8px"
   },
+
+  colour: {
+    width: '300px'
+  }
 });
 
 // Controls component
@@ -25,12 +29,12 @@ const Controls: React.FunctionComponent<ControlsProps> =
 
       return (
         <div className={classes.controls}>
-          <Container>
+          <Container className={classes.colour}>
             <Wheel
               color={hsva}
               onChange={(color) => { setHsva({ ...hsva, ...color.hsva }); }}
-              height={400}
-              width={400}
+              height={300}
+              width={300}
             />
           </Container>
         </div>
