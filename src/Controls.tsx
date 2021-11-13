@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Wheel from '@uiw/react-color-wheel';
 
 // Explicit styles
 const useStyles = makeStyles({
@@ -20,11 +21,17 @@ const Controls: React.FunctionComponent<ControlsProps> =
   ({ webSocket }) =>
     {
       const classes = useStyles();
+      const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 1 });
 
       return (
         <div className={classes.controls}>
           <Container>
-            <div>Controls go here!</div>
+            <Wheel
+              color={hsva}
+              onChange={(color) => { setHsva({ ...hsva, ...color.hsva }); }}
+              height={400}
+              width={400}
+            />
           </Container>
         </div>
       );
