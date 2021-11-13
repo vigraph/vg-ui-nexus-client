@@ -6,7 +6,7 @@ const useStyles = makeStyles({
   queueInfo: {
     position: 'absolute',
     right: '10px',
-    top: '8px',
+    top: '5vw',
     fontSize: '5vw'
   },
 });

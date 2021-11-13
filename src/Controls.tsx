@@ -7,10 +7,11 @@ import Wheel from '@uiw/react-color-wheel';
 const useStyles = makeStyles({
   controls: {
     fontSize: "24px",
-    padding: "8px"
+    paddingTop: "20px"
   },
 
   colour: {
+    padding: '0',
     width: '300px'
   }
 });
