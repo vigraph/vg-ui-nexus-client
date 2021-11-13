@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Slider from '@material-ui/core/Slider';
 import Wheel from '@uiw/react-color-wheel';
 
 // Explicit styles
@@ -12,6 +13,11 @@ const useStyles = makeStyles({
 
   colour: {
     padding: '0',
+    width: '300px'
+  },
+
+  speed: {
+    marginTop: "20px",
     width: '300px'
   }
 });
@@ -37,6 +43,9 @@ const Controls: React.FunctionComponent<ControlsProps> =
               height={300}
               width={300}
             />
+          </Container>
+          <Container className={classes.speed}>
+            <Slider/>
           </Container>
         </div>
       );
