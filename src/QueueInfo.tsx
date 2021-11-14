@@ -1,4 +1,5 @@
 import React from 'react';
+import type { QueueStatus } from './Types';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Explicit styles
@@ -13,33 +14,36 @@ const useStyles = makeStyles({
 
 // Queue info component
 interface QueueInfoProps {
-  state: string;
-  position: number;
-  time: number;
+  status: QueueStatus;
 }
 
 // Main app
 const QueueInfo: React.FunctionComponent<QueueInfoProps> =
-   ({ state, position, time }) =>
+   ({ status }) =>
   {
     const classes = useStyles();
 
-    let mins = Math.floor(time/60);
-    let secs = time%60;
-    const mmss = (mins<10?"0":"")+mins+":"+(secs<10?"0":"")+secs;
+    let mmss = "";
+    if (typeof status.time == "number")
+    {
+      const mins = Math.floor(status.time/60);
+      const secs = status.time%60;
+      mmss = (mins<10?"0":"")+mins+":"+(secs<10?"0":"")+secs;
+    }
 
     return (
       <div className={classes.queueInfo}>
-        { state === "idle" &&
+        { status.state === "idle" &&
           <span/>
         }
-        { state === "waiting" && position === 1 &&
+        { status.state === "waiting" && status.position === 1 &&
           <span>You're next! {mmss} to go</span>
         }
-        { state === "waiting" && position > 1 &&
-          <span>{position} ahead of you, {mmss} to go</span>
+        { status.state === "waiting" && typeof status.position == "number" &&
+          status.position > 1 &&
+          <span>{status.position} ahead of you, {mmss} to go</span>
         }
-        { state === "active" &&
+        { status.state === "active" &&
           <span>Your turn! {mmss} remaining</span>
         }
       </div>
