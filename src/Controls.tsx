@@ -25,13 +25,12 @@ const useStyles = makeStyles({
 
 // Controls component
 interface ControlsProps {
-  webSocket: WebSocket;
   updateControls: (values: ControlValues) => void;
 }
 
 // Main app
 const Controls: React.FunctionComponent<ControlsProps> =
-  ({ webSocket, updateControls }) =>
+  ({ updateControls }) =>
     {
       const classes = useStyles();
       const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 1 });

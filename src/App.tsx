@@ -141,8 +141,7 @@ const App: React.FunctionComponent = () =>
             }
           </header>
           { queueStatus.state === "active" && webSocket.current &&
-            <Controls webSocket={webSocket.current}
-                      updateControls={updateControls} />
+            <Controls updateControls={updateControls} />
           }
         </div>
       </ThemeProvider>
