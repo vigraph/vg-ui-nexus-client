@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { createMuiTheme, ThemeProvider, makeStyles }
+import { createTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import QueueInfo from './QueueInfo';
 import Controls from './Controls';
-import type { QueueStatus } from './Types';
+import type { QueueStatus, ControlValues } from './Types';
 
 import icon from './graphics/header-icon.svg';
 import config from './config.json';
 
 // Theme overrides
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     type: 'dark',
     primary: {
@@ -98,12 +98,22 @@ const App: React.FunctionComponent = () =>
       webSocket.current && webSocket.current.send(JSON.stringify(json));
     }
 
+    // Send our control values
+    function updateControls(values: ControlValues)
+    {
+      const json = {
+        type: "control",
+        values: values
+      };
+      webSocket.current && webSocket.current.send(JSON.stringify(json));
+    }
+
     // Start the websocket
     function start_ws()
     {
       const ws = new WebSocket(config.nexusURL);
       ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
-      ws.onerror = () => { setTimeout(start_ws, 1000); };
+      ws.onerror = () => { ws.close(); };
       ws.onclose = () => { setTimeout(start_ws, 1000); };
       webSocket.current = ws;
     }
@@ -131,7 +141,8 @@ const App: React.FunctionComponent = () =>
             }
           </header>
           { queueStatus.state === "active" && webSocket.current &&
-            <Controls webSocket={webSocket.current}/>
+            <Controls webSocket={webSocket.current}
+                      updateControls={updateControls} />
           }
         </div>
       </ThemeProvider>

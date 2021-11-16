@@ -8,3 +8,9 @@ export type QueueStatus =
   time?: number;        // Seconds before our turn / end of turn
 };
 
+export type ControlValues =
+{
+  hue?: number;
+  saturation?: number;
+  speed?: number;
+};
