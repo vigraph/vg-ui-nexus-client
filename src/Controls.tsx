@@ -48,7 +48,8 @@ const Controls: React.FunctionComponent<ControlsProps> =
               color={hsva}
               onChange={(color) => {
                 setHsva({ ...hsva, ...color.hsva });
-                updateControls({ hue: color.hsl.h, saturation: color.hsl.s });
+                updateControls({ hue: hsva.h / 360,
+                                 saturation: hsva.s / 100 });
               }}
               height={300}
               width={300}
@@ -59,7 +60,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
               value={speed}
               onChange={ (_event, newValue) => {
                 setSpeed(newValue as number);
-                updateControls({ speed: speed })
+                updateControls({ speed: speed/100 })
               }} />
           </Container>
         </div>
