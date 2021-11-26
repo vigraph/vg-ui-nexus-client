@@ -6,6 +6,9 @@ import Button from '@material-ui/core/Button';
 import Wheel from '@uiw/react-color-wheel';
 import { ControlValues } from './Types';
 
+import hare from './graphics/hare.svg';
+import tortoise from './graphics/tortoise.svg';
+
 // Explicit styles
 const useStyles = makeStyles({
   controls: {
@@ -16,18 +19,34 @@ const useStyles = makeStyles({
 
   control: {
     display: "inline-block",
-    marginTop: "20px"
+    marginTop: "20px",
+    whiteSpace: "nowrap"
   },
 
   button: {
     marginLeft: "8px",
     fontSize: "32px",
     minWidth: "12vw"
+  },
+
+  tortoise: {
+    float: 'left',
+    marginTop: '2px',
+    height: '28px'
+  },
+
+  hare: {
+    float: 'right',
+    height: '32px'
   }
 });
 
 // Custom slider
 const OurSlider = withStyles({
+  root: {
+    width: "190px",
+    padding: "10px 2px"
+  },
   track: {
     height: 4
   },
@@ -85,12 +104,16 @@ const Controls: React.FunctionComponent<ControlsProps> =
           </Box>
           <Box className={classes.control} sx={{ width: 300 }}>
             <OurSlider color="secondary"
-              value={speed}
-              onChange={ (_event, newValue) => {
-                  setSpeed(newValue as number);
-                  updateControls({ speed: speed/100 })
-              }}
+                       value={speed}
+                       onChange={ (_event, newValue) => {
+                           setSpeed(newValue as number);
+                           updateControls({ speed: speed/100 })
+                       }}
             />
+            <img src={tortoise} aria-label='Tortoise'
+                 className={classes.tortoise} alt="slow" />
+            <img src={hare} aria-label='Hare'
+                 className={classes.hare} alt="fast" />
           </Box>
         </div>
       );
