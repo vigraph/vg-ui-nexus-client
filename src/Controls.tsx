@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 import Slider from '@material-ui/core/Slider';
 import Button from '@material-ui/core/Button';
 import Wheel from '@uiw/react-color-wheel';
+import { Pointer } from './ColourWheelPointer';
 import { ControlValues } from './Types';
 
 import hare from './graphics/hare.svg';
@@ -100,6 +101,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
               }}
               height={300}
               width={300}
+              pointer={Pointer}
             />
           </Box>
           <Box className={classes.control} sx={{ width: 300 }}>
