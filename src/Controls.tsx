@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Slider from '@material-ui/core/Slider';
 import Button from '@material-ui/core/Button';
@@ -25,6 +25,16 @@ const useStyles = makeStyles({
     minWidth: "12vw"
   }
 });
+
+// Custom slider
+const OurSlider = withStyles({
+  track: {
+    height: 4
+  },
+  rail: {
+    height: 4
+  }
+})(Slider);
 
 // Controls component
 interface ControlsProps {
@@ -74,7 +84,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
             />
           </Box>
           <Box className={classes.control} sx={{ width: 300 }}>
-            <Slider
+            <OurSlider color="secondary"
               value={speed}
               onChange={ (_event, newValue) => {
                   setSpeed(newValue as number);
