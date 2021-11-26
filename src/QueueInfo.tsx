@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   queueInfo: {
     position: 'absolute',
     top: '0px',
-    right: '0px',
+    right: '10px',
     paddingTop: '10px'
   },
 
@@ -45,8 +45,7 @@ const useStyles = makeStyles({
 
   go: {
     display: 'inline-block',
-    width: '40vw',
-    textAlign: 'center',
+    width: '50vw',
     fontSize: '32px',
     fontWeight: 'bold',
     verticalAlign: 'top',

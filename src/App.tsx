@@ -6,7 +6,6 @@ import QueueInfo from './QueueInfo';
 import Controls from './Controls';
 import type { QueueStatus, ControlValues } from './Types';
 
-import icon from './graphics/header-icon.svg';
 import config from './config.json';
 
 // Theme overrides
@@ -33,10 +32,6 @@ const useStyles = makeStyles({
     width: 'calc(100% - 20px)',
     padding: '10px',
     borderBottom: 'solid 1px #444'
-  },
-
-  logo: {
-    height: '40px'
   },
 
   join: {
@@ -129,8 +124,6 @@ const App: React.FunctionComponent = () =>
       <ThemeProvider theme={theme}>
         <div className={classes.app}>
           <header className={classes.header}>
-            <img src={icon} aria-label='Nexus icon'
-                 className={classes.logo} alt="" />
             <QueueInfo status={queueStatus}/>
             {
               queueStatus.state === "idle" &&
