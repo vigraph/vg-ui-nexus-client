@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Slider from '@material-ui/core/Slider';
+import Button from '@material-ui/core/Button';
 import Wheel from '@uiw/react-color-wheel';
 import { ControlValues } from './Types';
 
@@ -9,17 +10,19 @@ import { ControlValues } from './Types';
 const useStyles = makeStyles({
   controls: {
     fontSize: "24px",
-    paddingTop: "20px"
+    padding: "10px",
+    textAlign: "center"
   },
 
-  colour: {
-    padding: '0',
-    width: '300px'
+  control: {
+    display: "inline-block",
+    marginTop: "20px"
   },
 
-  speed: {
-    marginTop: "20px",
-    width: '300px'
+  button: {
+    marginLeft: "8px",
+    fontSize: "32px",
+    minWidth: "12vw"
   }
 });
 
@@ -34,37 +37,53 @@ const Controls: React.FunctionComponent<ControlsProps> =
     {
       const classes = useStyles();
       const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 1 });
+      const [pattern, setPattern] = useState(0);
       const [speed, setSpeed] = useState(0);
 
       // Send initial values on start
       useEffect( () => {
-        updateControls({ hue: hsva.h, saturation: hsva.s, speed: speed });
+        updateControls({ pattern: pattern+1, hue: hsva.h, saturation: hsva.s,
+                         speed: speed });
       }, []);
 
+      const buttonNames = [ "1", "2", "3", "4", "5" ];
       return (
         <div className={classes.controls}>
-          <Container className={classes.colour}>
+          <Box className={classes.control}>
+            {
+              buttonNames.map((name: string, index: number) =>
+                <Button className={classes.button} variant="contained"
+                        color={index==pattern?"secondary":"primary"}
+                        key={index}
+                        onClick={() => {
+                            setPattern(index);
+                            updateControls({ pattern: index+1 });
+                        }}>{name}</Button>)
+            }
+          </Box>
+          <Box className={classes.control}>
             <Wheel
               color={hsva}
               onChange={(color) => {
-                setHsva({ ...hsva, ...color.hsva });
-                updateControls({ hue: hsva.h / 360,
-                                 saturation: hsva.s / 100 });
+                  setHsva({ ...hsva, ...color.hsva });
+                  updateControls({ hue: hsva.h / 360,
+                                   saturation: hsva.s / 100 });
               }}
               height={300}
               width={300}
             />
-          </Container>
-          <Container className={classes.speed}>
+          </Box>
+          <Box className={classes.control} sx={{ width: 300 }}>
             <Slider
               value={speed}
               onChange={ (_event, newValue) => {
-                setSpeed(newValue as number);
-                updateControls({ speed: speed/100 })
-              }} />
-          </Container>
+                  setSpeed(newValue as number);
+                  updateControls({ speed: speed/100 })
+              }}
+            />
+          </Box>
         </div>
       );
-  };
+    };
 
 export default Controls;

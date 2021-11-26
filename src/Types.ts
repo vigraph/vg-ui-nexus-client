@@ -10,6 +10,7 @@ export type QueueStatus =
 
 export type ControlValues =
 {
+  pattern?: number;
   hue?: number;
   saturation?: number;
   speed?: number;
