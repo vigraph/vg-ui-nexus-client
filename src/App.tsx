@@ -6,7 +6,17 @@ import QueueInfo from './QueueInfo';
 import Controls from './Controls';
 import type { QueueStatus, ControlValues } from './Types';
 
-import config from './config.json';
+// Deploy-specific config, read from public/config.js
+type Config = {
+  nexusURL: string;
+  resource: string;
+};
+
+declare global {
+  var appConfig: Config;
+}
+
+const config = window.appConfig;
 
 // Theme overrides
 const theme = createTheme({
