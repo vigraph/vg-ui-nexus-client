@@ -89,7 +89,7 @@ const App: React.FunctionComponent = () =>
     // Join the queue
     function join()
     {
-      const json = { type: "join" };
+      const json = { type: "join", resource: config.resource };
       webSocket.current && webSocket.current.send(JSON.stringify(json));
     }
 

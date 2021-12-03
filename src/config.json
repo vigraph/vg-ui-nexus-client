@@ -1,3 +1,4 @@
 {
-  "nexusURL": "ws://localhost:33480/"
+  "nexusURL": "ws://localhost:33480/",
+  "resource": "test"
 }
