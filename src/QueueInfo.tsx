@@ -1,6 +1,6 @@
 import React from 'react';
 import type { QueueStatus } from './Types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 import headGreen from './graphics/head-green.svg';
 import headGrey from './graphics/head-grey.svg';

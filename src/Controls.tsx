@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Slider from '@material-ui/core/Slider';
-import Button from '@material-ui/core/Button';
+import { makeStyles, withStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import Button from '@mui/material/Button';
 import Wheel from '@uiw/react-color-wheel';
 import { Pointer } from './ColourWheelPointer';
 import { ControlValues } from './Types';

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { createTheme, ThemeProvider, makeStyles }
-  from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import { ThemeProvider, makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 import QueueInfo from './QueueInfo';
 import ImageCarousel from './ImageCarousel';
 import Controls from './Controls';
@@ -24,17 +23,17 @@ declare global {
 const config = window.appConfig;
 
 // Theme overrides
-const theme = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: "#00ff00"
-    },
-    secondary: {
-      main: "#18a080"
-    }
-  }
-});
+//const theme = createTheme({
+//  palette: {
+//    type: 'dark',
+//    primary: {
+//      main: "#00ff00"
+//    },
+//    secondary: {
+//      main: "#18a080"
+//    }
+//  }
+//});
 
 // Explicit styles
 const useStyles = makeStyles({
@@ -192,7 +191,7 @@ const App: React.FunctionComponent = () =>
     }
 
     return (
-      <ThemeProvider theme={theme}>
+ //     <ThemeProvider theme={theme}>
         <div className={classes.app}>
           { queueStatus.state !== "idle" &&
             <header className={classes.header}>
@@ -226,7 +225,7 @@ const App: React.FunctionComponent = () =>
             <div className={classes.flash}>Times up!</div>
           }
         </div>
-      </ThemeProvider>
+//      </ThemeProvider>
     );
   };
 
