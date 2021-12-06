@@ -28,7 +28,8 @@ const useStyles = makeStyles({
   app: {
     width: '100vw',
     maxWidth: '500px',
-    height: '100vh'
+    height: '100vh',
+    margin: 'auto'
   },
 
   header: {

@@ -30,6 +30,7 @@ const ImageCarousel: React.FunctionComponent<ImageCarouselProps> =
                   stopAutoPlayOnHover={false}
                   swipe={false}
                   navButtonsAlwaysInvisible={true}
+                  indicators={false}
         >
           { images.map( (url, index) =>
             <img src={url} key={index} className={classes.image} />
