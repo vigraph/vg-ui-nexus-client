@@ -11,6 +11,10 @@ import type { QueueStatus, ControlValues } from './Types';
 type Config = {
   nexusURL: string;
   resource: string;
+  graphics: {
+    welcome: string[];
+    queue: string[];
+  };
 };
 
 declare global {
