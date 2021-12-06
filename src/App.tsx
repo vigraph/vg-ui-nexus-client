@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import QueueInfo from './QueueInfo';
+import ImageCarousel from './ImageCarousel';
 import Controls from './Controls';
 import type { QueueStatus, ControlValues } from './Types';
 
@@ -23,10 +24,10 @@ const theme = createTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: "#0392fd"
+      main: "#00ff00"
     },
     secondary: {
-      main: "#18eaa2"
+      main: "#18a080"
     }
   }
 });
@@ -34,7 +35,12 @@ const theme = createTheme({
 // Explicit styles
 const useStyles = makeStyles({
   app: {
-    width: '100vw'
+    width: '100vw',
+    maxWidth: '500px',
+    height: '100vh',
+    margin: 'auto',
+    position: 'relative',
+    overflow: 'hidden'
   },
 
   header: {
@@ -45,10 +51,43 @@ const useStyles = makeStyles({
   },
 
   join: {
-    position: 'absolute',
-    right: '10px',
-    top: '10px'
+    display: "block",
+    margin: "auto"
   },
+
+  welcomeCarousel:
+  {
+    height: "90%"
+  },
+
+  queueCarousel:
+  {
+    height: "100%"
+  },
+
+  "@keyframes zoom":
+  {
+    "0%": {
+      opacity: 1,
+    },
+    "100%": {
+      opacity: 0,
+      transform: "scale(10)"
+    }
+  },
+
+  flash:
+  {
+    position: "absolute",
+    top: "30%",
+    width: "100%",
+    textAlign: "center",
+    fontSize: "40px",
+    color: "white",
+    zIndex: 10,
+    opacity: 0,
+    animation: "$zoom 2s"
+  }
 });
 
 // Main app
@@ -58,6 +97,8 @@ const App: React.FunctionComponent = () =>
     const webSocket = useRef(null as WebSocket | null);
     const [queueStatus, setQueueStatus] =
       useState<QueueStatus>({ state: "idle" });
+    const [stateChanged, setStateChanged] = useState(false);
+    let lastState = "idle";
 
     // Handle an inbound message
     function handleMessage(msg: string)
@@ -66,9 +107,11 @@ const App: React.FunctionComponent = () =>
       try
       {
         const json = JSON.parse(msg);
+        let newState = "";
         switch (json.type)
         {
           case "qinfo":
+            newState = "waiting";
             setQueueStatus({ state: "waiting",
                              position: json.position,
                              total: json.total,
@@ -76,18 +119,29 @@ const App: React.FunctionComponent = () =>
           break;
 
           case "active":
-          setQueueStatus({ state: "active",
-                          total: json.total,
-                          time: json.time });
+            newState = "active";
+            setQueueStatus({ state: "active",
+                             total: json.total,
+                             time: json.time });
           break;
 
           case "timeup":
-          setQueueStatus({ state: "idle",
-                          total: json.total });
+            newState = "idle";
+            setQueueStatus({ state: "idle",
+                             total: json.total });
+            stop_ws();
           break;
 
           default:
           console.log("Unrecognised Nexus message "+json.type);
+          return;
+        }
+
+        if (newState !== lastState)
+        {
+          setStateChanged(true);
+          lastState = newState;
+          setTimeout(() => { setStateChanged(false); }, 2000);
         }
       }
       catch (e)
@@ -117,34 +171,55 @@ const App: React.FunctionComponent = () =>
     function start_ws()
     {
       const ws = new WebSocket(config.nexusURL);
+      ws.onopen = () => { join(); }
       ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
-      ws.onerror = () => { ws.close(); };
-      ws.onclose = () => { setTimeout(start_ws, 1000); };
+      ws.onerror = () => { stop_ws(); }
+      ws.onclose = () => { stop_ws(); }
       webSocket.current = ws;
     }
 
-    useEffect( () => {
-      start_ws();
-      return () => {
-        webSocket.current && webSocket.current.close();
-      };
-    }, []);
+    // Stop the websocket
+    function stop_ws()
+    {
+      if (webSocket.current && webSocket.current.readyState <= 1)
+        webSocket.current.close();
+      webSocket.current = null;
+      setQueueStatus({ state: "idle" });
+    }
 
     return (
       <ThemeProvider theme={theme}>
         <div className={classes.app}>
-          <header className={classes.header}>
-            <QueueInfo status={queueStatus}/>
-            {
-              queueStatus.state === "idle" &&
+          { queueStatus.state !== "idle" &&
+            <header className={classes.header}>
+              <QueueInfo status={queueStatus}/>
+            </header>
+          }
+          { queueStatus.state === "idle" &&
+            <>
+              <ImageCarousel images={config.graphics.welcome}
+                             className={classes.welcomeCarousel}/>
               <Button className={classes.join} variant="contained"
-                      color="primary" onClick={join}>
-                Join
+                      color="primary" size="large" onClick={start_ws}>
+                Let's go!
               </Button>
-            }
-          </header>
+            </>
+          }
+          { queueStatus.state === "waiting" &&
+            <>
+              <ImageCarousel images={config.graphics.queue}
+                             className={classes.queueCarousel}/>
+            </>
+          }
           { queueStatus.state === "active" && webSocket.current &&
             <Controls updateControls={updateControls} />
+          }
+
+          { stateChanged && queueStatus.state === "active" &&
+            <div className={classes.flash}>Go!</div>
+          }
+          { stateChanged && queueStatus.state === "idle" &&
+            <div className={classes.flash}>Times up!</div>
           }
         </div>
       </ThemeProvider>

@@ -15,19 +15,20 @@ const useStyles = makeStyles({
   controls: {
     fontSize: "24px",
     padding: "10px",
-    textAlign: "center"
+    textAlign: "center",
+    maxWidth: "500px"
   },
 
   control: {
     display: "inline-block",
     marginTop: "20px",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
+    maxWidth: "500px"
   },
 
   button: {
     marginLeft: "8px",
-    fontSize: "32px",
-    minWidth: "12vw"
+    fontSize: "32px"
   },
 
   tortoise: {
@@ -83,7 +84,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
             {
               buttonNames.map((name: string, index: number) =>
                 <Button className={classes.button} variant="contained"
-                        color={index==pattern?"secondary":"primary"}
+                        color={index==pattern?"primary":"secondary"}
                         key={index}
                         onClick={() => {
                             setPattern(index);
