@@ -7,7 +7,7 @@ const useStyles = makeStyles({
   image: {
     display: "block",
     margin: "auto",
-    height: "90vh"
+    maxWidth: "90%"
   }
 });
 
