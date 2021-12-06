@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { ThemeProvider, makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import QueueInfo from './QueueInfo';
 import ImageCarousel from './ImageCarousel';
@@ -23,20 +24,20 @@ declare global {
 const config = window.appConfig;
 
 // Theme overrides
-//const theme = createTheme({
-//  palette: {
-//    type: 'dark',
-//    primary: {
-//      main: "#00ff00"
-//    },
-//    secondary: {
-//      main: "#18a080"
-//    }
-//  }
-//});
+const theme = createTheme({
+  palette: {
+//!!!    type: 'dark',
+    primary: {
+      main: "#00ff00"
+    },
+    secondary: {
+      main: "#18a080"
+    }
+  }
+});
 
 // Explicit styles
-const useStyles = makeStyles({
+const useStyles = makeStyles( (theme) => ({
   app: {
     width: '100vw',
     maxWidth: '500px',
@@ -91,10 +92,10 @@ const useStyles = makeStyles({
     opacity: 0,
     animation: "$zoom 2s"
   }
-});
+}));
 
-// Main app
-const App: React.FunctionComponent = () =>
+// Main app component
+const NexusClient: React.FunctionComponent = () =>
   {
     const classes = useStyles();
     const webSocket = useRef(null as WebSocket | null);
@@ -191,42 +192,47 @@ const App: React.FunctionComponent = () =>
     }
 
     return (
- //     <ThemeProvider theme={theme}>
-        <div className={classes.app}>
-          { queueStatus.state !== "idle" &&
-            <header className={classes.header}>
-              <QueueInfo status={queueStatus}/>
-            </header>
-          }
-          { queueStatus.state === "idle" &&
-            <>
-              <ImageCarousel images={config.graphics.welcome}
-                             className={classes.welcomeCarousel}/>
-              <Button className={classes.join} variant="contained"
-                      color="primary" size="large" onClick={start_ws}>
-                Let's go!
-              </Button>
-            </>
-          }
-          { queueStatus.state === "waiting" &&
-            <>
-              <ImageCarousel images={config.graphics.queue}
-                             className={classes.queueCarousel}/>
-            </>
-          }
-          { queueStatus.state === "active" && webSocket.current &&
-            <Controls updateControls={updateControls} />
-          }
+      <div className={classes.app}>
+        { queueStatus.state !== "idle" &&
+          <header className={classes.header}>
+            <QueueInfo status={queueStatus}/>
+          </header>
+        }
+        { queueStatus.state === "idle" &&
+          <>
+            <ImageCarousel images={config.graphics.welcome}
+                           className={classes.welcomeCarousel}/>
+            <Button className={classes.join} variant="contained"
+                    color="primary" size="large" onClick={start_ws}>
+              Let's go!
+            </Button>
+          </>
+        }
+        { queueStatus.state === "waiting" &&
+          <>
+            <ImageCarousel images={config.graphics.queue}
+                           className={classes.queueCarousel}/>
+          </>
+        }
+        { queueStatus.state === "active" && webSocket.current &&
+          <Controls updateControls={updateControls} />
+        }
 
-          { stateChanged && queueStatus.state === "active" &&
-            <div className={classes.flash}>Go!</div>
-          }
-          { stateChanged && queueStatus.state === "idle" &&
-            <div className={classes.flash}>Times up!</div>
-          }
-        </div>
-//      </ThemeProvider>
+        { stateChanged && queueStatus.state === "active" &&
+          <div className={classes.flash}>Go!</div>
+        }
+        { stateChanged && queueStatus.state === "idle" &&
+          <div className={classes.flash}>Times up!</div>
+        }
+      </div>
     );
   };
+
+const App: React.FunctionComponent = () =>
+{
+  return <ThemeProvider theme={theme}>
+    <NexusClient/>
+  </ThemeProvider>;
+};
 
 export default App;
