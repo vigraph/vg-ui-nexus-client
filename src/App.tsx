@@ -119,6 +119,7 @@ const App: React.FunctionComponent = () =>
             newState = "idle";
             setQueueStatus({ state: "idle",
                              total: json.total });
+            stop_ws();
           break;
 
           default:
@@ -160,18 +161,21 @@ const App: React.FunctionComponent = () =>
     function start_ws()
     {
       const ws = new WebSocket(config.nexusURL);
+      ws.onopen = () => { join(); }
       ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
-      ws.onerror = () => { ws.close(); };
-      ws.onclose = () => { setTimeout(start_ws, 1000); };
+      ws.onerror = () => { stop_ws(); }
+      ws.onclose = () => { stop_ws(); }
       webSocket.current = ws;
     }
 
-    useEffect( () => {
-      start_ws();
-      return () => {
-        webSocket.current && webSocket.current.close();
-      };
-    }, []);
+    // Stop the websocket
+    function stop_ws()
+    {
+      if (webSocket.current && webSocket.current.readyState <= 1)
+        webSocket.current.close();
+      webSocket.current = null;
+      setQueueStatus({ state: "idle" });
+    }
 
     return (
       <ThemeProvider theme={theme}>
@@ -186,7 +190,7 @@ const App: React.FunctionComponent = () =>
               <ImageCarousel images={config.graphics.welcome}
                              className={classes.welcomeCarousel}/>
               <Button className={classes.join} variant="contained"
-                      color="primary" size="large" onClick={join}>
+                      color="primary" size="large" onClick={start_ws}>
                 Let's go!
               </Button>
             </>
