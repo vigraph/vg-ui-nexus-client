@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { createTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import QueueInfo from './QueueInfo';
+import ImageCarousel from './ImageCarousel';
 import Controls from './Controls';
 import type { QueueStatus, ControlValues } from './Types';
 
@@ -13,10 +15,10 @@ const theme = createTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: "#0392fd"
+      main: "#00ff00"
     },
     secondary: {
-      main: "#18eaa2"
+      main: "#18a080"
     }
   }
 });
@@ -24,7 +26,8 @@ const theme = createTheme({
 // Explicit styles
 const useStyles = makeStyles({
   app: {
-    width: '100vw'
+    width: '100vw',
+    height: '100vh'
   },
 
   header: {
@@ -35,10 +38,20 @@ const useStyles = makeStyles({
   },
 
   join: {
-    position: 'absolute',
-    right: '10px',
-    top: '10px'
+    display: "block",
+    margin: "auto"
   },
+
+  welcomeCarousel:
+  {
+    height: "90%"
+  },
+
+  queueCarousel:
+  {
+    height: "100%"
+  }
+
 });
 
 // Main app
@@ -123,19 +136,31 @@ const App: React.FunctionComponent = () =>
     return (
       <ThemeProvider theme={theme}>
         <div className={classes.app}>
-          <header className={classes.header}>
-            <QueueInfo status={queueStatus}/>
-            {
-              queueStatus.state === "idle" &&
+          { queueStatus.state !== "idle" &&
+            <header className={classes.header}>
+              <QueueInfo status={queueStatus}/>
+            </header>
+          }
+          { queueStatus.state === "idle" &&
+            <>
+              <ImageCarousel images={config.graphics.welcome}
+                             className={classes.welcomeCarousel}/>
               <Button className={classes.join} variant="contained"
-                      color="primary" onClick={join}>
-                Join
+                      color="primary" size="large" onClick={join}>
+                Let's go!
               </Button>
-            }
-          </header>
+            </>
+          }
+          { queueStatus.state === "waiting" &&
+            <>
+              <ImageCarousel images={config.graphics.queue}
+                             className={classes.queueCarousel}/>
+            </>
+          }
           { queueStatus.state === "active" && webSocket.current &&
             <Controls updateControls={updateControls} />
           }
+
         </div>
       </ThemeProvider>
     );

@@ -83,7 +83,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
             {
               buttonNames.map((name: string, index: number) =>
                 <Button className={classes.button} variant="contained"
-                        color={index==pattern?"secondary":"primary"}
+                        color={index==pattern?"primary":"secondary"}
                         key={index}
                         onClick={() => {
                             setPattern(index);

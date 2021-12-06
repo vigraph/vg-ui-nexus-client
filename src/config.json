@@ -1,4 +1,13 @@
 {
-  "nexusURL": "ws://localhost:33480/",
-  "resource": "test"
+  "nexusURL": "wss://nexus.greenwaveinteractive.com:33480/",
+  "resource": "test",
+  "graphics": {
+    "welcome": [
+      "graphics/welcome1.png",
+      "graphics/welcome2.png"
+    ],
+    "queue": [
+      "graphics/queue1.png"
+    ]
+  }
 }
