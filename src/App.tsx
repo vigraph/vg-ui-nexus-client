@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { createTheme, ThemeProvider, makeStyles }
   from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
 import QueueInfo from './QueueInfo';
 import ImageCarousel from './ImageCarousel';
 import Controls from './Controls';
@@ -29,7 +28,9 @@ const useStyles = makeStyles({
     width: '100vw',
     maxWidth: '500px',
     height: '100vh',
-    margin: 'auto'
+    margin: 'auto',
+    position: 'relative',
+    overflow: 'hidden'
   },
 
   header: {
@@ -52,8 +53,31 @@ const useStyles = makeStyles({
   queueCarousel:
   {
     height: "100%"
-  }
+  },
 
+  "@keyframes zoom":
+  {
+    "0%": {
+      opacity: 1,
+    },
+    "100%": {
+      opacity: 0,
+      transform: "scale(10)"
+    }
+  },
+
+  flash:
+  {
+    position: "absolute",
+    top: "30%",
+    width: "100%",
+    textAlign: "center",
+    fontSize: "40px",
+    color: "white",
+    zIndex: 10,
+    opacity: 0,
+    animation: "$zoom 2s"
+  }
 });
 
 // Main app
@@ -63,6 +87,8 @@ const App: React.FunctionComponent = () =>
     const webSocket = useRef(null as WebSocket | null);
     const [queueStatus, setQueueStatus] =
       useState<QueueStatus>({ state: "idle" });
+    const [stateChanged, setStateChanged] = useState(false);
+    let lastState = "idle";
 
     // Handle an inbound message
     function handleMessage(msg: string)
@@ -71,9 +97,11 @@ const App: React.FunctionComponent = () =>
       try
       {
         const json = JSON.parse(msg);
+        let newState = "";
         switch (json.type)
         {
           case "qinfo":
+            newState = "waiting";
             setQueueStatus({ state: "waiting",
                              position: json.position,
                              total: json.total,
@@ -81,18 +109,28 @@ const App: React.FunctionComponent = () =>
           break;
 
           case "active":
-          setQueueStatus({ state: "active",
-                          total: json.total,
-                          time: json.time });
+            newState = "active";
+            setQueueStatus({ state: "active",
+                             total: json.total,
+                             time: json.time });
           break;
 
           case "timeup":
-          setQueueStatus({ state: "idle",
-                          total: json.total });
+            newState = "idle";
+            setQueueStatus({ state: "idle",
+                             total: json.total });
           break;
 
           default:
           console.log("Unrecognised Nexus message "+json.type);
+          return;
+        }
+
+        if (newState !== lastState)
+        {
+          setStateChanged(true);
+          lastState = newState;
+          setTimeout(() => { setStateChanged(false); }, 2000);
         }
       }
       catch (e)
@@ -163,6 +201,12 @@ const App: React.FunctionComponent = () =>
             <Controls updateControls={updateControls} />
           }
 
+          { stateChanged && queueStatus.state === "active" &&
+            <div className={classes.flash}>Go!</div>
+          }
+          { stateChanged && queueStatus.state === "idle" &&
+            <div className={classes.flash}>Times up!</div>
+          }
         </div>
       </ThemeProvider>
     );

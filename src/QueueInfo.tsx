@@ -27,6 +27,7 @@ const useStyles = makeStyles({
   position: {
     display: 'inline-block',
     fontSize: '32px',
+    lineHeight: '32px',
     verticalAlign: 'top',
     paddingRight: '20px'
   },
@@ -58,14 +59,15 @@ const useStyles = makeStyles({
 
   clock: {
     display: 'inline-block',
-    height: '32px',
     verticalAlign: 'middle',
+    height: '32px'
   },
 
   time: {
     display: 'inline-block',
     fontSize: '32px',
     verticalAlign: 'top',
+    lineHeight: '32px',
     paddingLeft: '5px'
   },
 
