@@ -66,9 +66,10 @@ const useStyles = makeStyles({
   time: {
     display: 'inline-block',
     fontSize: '32px',
+    fontFamily: 'monospace',
     verticalAlign: 'top',
     lineHeight: '32px',
-    paddingLeft: '5px'
+    paddingLeft: '5px',
   },
 
 

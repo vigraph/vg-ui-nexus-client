@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
@@ -26,11 +27,6 @@ const useStyles = makeStyles({
     maxWidth: "500px"
   },
 
-  button: {
-    marginLeft: "8px",
-    fontSize: "32px"
-  },
-
   tortoise: {
     float: 'left',
     marginTop: '2px',
@@ -44,20 +40,24 @@ const useStyles = makeStyles({
 });
 
 // Custom slider
-const OurSlider = withStyles({
-  root: {
-    width: "190px",
-    padding: "10px 2px"
-  },
-  track: {
+const OurSlider = styled(Slider)({
+  width: "190px",
+  padding: "10px 2px",
+  '& .MuiSlider-track': {
     height: 4
   },
-  rail: {
+  '& .MuiSlider-rail': {
     height: 4
   }
-})(Slider);
+});
 
-// Controls component
+// Custom button
+const OurButton = styled(Button)({
+  marginLeft: "8px",
+  fontSize: "32px"
+});
+
+  // Controls component
 interface ControlsProps {
   updateControls: (values: ControlValues) => void;
 }
@@ -83,13 +83,13 @@ const Controls: React.FunctionComponent<ControlsProps> =
           <Box className={classes.control}>
             {
               buttonNames.map((name: string, index: number) =>
-                <Button className={classes.button} variant="contained"
+                <OurButton variant="contained"
                         color={index==pattern?"primary":"secondary"}
                         key={index}
                         onClick={() => {
                             setPattern(index);
                             updateControls({ pattern: index+1 });
-                        }}>{name}</Button>)
+                        }}>{name}</OurButton>)
             }
           </Box>
           <Box className={classes.control}>

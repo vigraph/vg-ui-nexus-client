@@ -26,7 +26,6 @@ const config = window.appConfig;
 // Theme overrides
 const theme = createTheme({
   palette: {
-//!!!    type: 'dark',
     primary: {
       main: "#00ff00"
     },
@@ -55,18 +54,17 @@ const useStyles = makeStyles( (theme) => ({
   },
 
   join: {
-    display: "block",
-    margin: "auto"
+    textAlign: "center"
   },
 
   welcomeCarousel:
   {
-    height: "90%"
+    height: "80%"
   },
 
   queueCarousel:
   {
-    height: "100%"
+    height: "90%"
   },
 
   "@keyframes zoom":
@@ -90,7 +88,8 @@ const useStyles = makeStyles( (theme) => ({
     color: "white",
     zIndex: 10,
     opacity: 0,
-    animation: "$zoom 2s"
+    animation: "$zoom 2s",
+    pointerEvents: "none"
   }
 }));
 
@@ -115,25 +114,25 @@ const NexusClient: React.FunctionComponent = () =>
         switch (json.type)
         {
           case "qinfo":
-            newState = "waiting";
-            setQueueStatus({ state: "waiting",
-                             position: json.position,
-                             total: json.total,
-                             time: json.time });
+          newState = "waiting";
+          setQueueStatus({ state: "waiting",
+                           position: json.position,
+                           total: json.total,
+                           time: json.time });
           break;
 
           case "active":
-            newState = "active";
-            setQueueStatus({ state: "active",
-                             total: json.total,
-                             time: json.time });
+          newState = "active";
+          setQueueStatus({ state: "active",
+                           total: json.total,
+                           time: json.time });
           break;
 
           case "timeup":
-            newState = "idle";
-            setQueueStatus({ state: "idle",
-                             total: json.total });
-            stop_ws();
+          newState = "idle";
+          setQueueStatus({ state: "idle",
+                           total: json.total });
+          stop_ws();
           break;
 
           default:
@@ -142,11 +141,11 @@ const NexusClient: React.FunctionComponent = () =>
         }
 
         if (newState !== lastState)
-        {
-          setStateChanged(true);
-          lastState = newState;
-          setTimeout(() => { setStateChanged(false); }, 2000);
-        }
+          {
+            setStateChanged(true);
+            lastState = newState;
+            setTimeout(() => { setStateChanged(false); }, 2000);
+          }
       }
       catch (e)
       {
@@ -202,10 +201,12 @@ const NexusClient: React.FunctionComponent = () =>
           <>
             <ImageCarousel images={config.graphics.welcome}
                            className={classes.welcomeCarousel}/>
-            <Button className={classes.join} variant="contained"
-                    color="primary" size="large" onClick={start_ws}>
-              Let's go!
-            </Button>
+            <p className={classes.join}>
+              <Button variant="contained"
+                      color="primary" size="large" onClick={start_ws}>
+                Let's go!
+              </Button>
+            </p>
           </>
         }
         { queueStatus.state === "waiting" &&
