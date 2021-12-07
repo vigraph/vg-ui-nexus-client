@@ -29,18 +29,19 @@ const useStyles = makeStyles({
     fontSize: '32px',
     lineHeight: '32px',
     verticalAlign: 'top',
-    paddingRight: '20px'
+    paddingRight: '12px'
   },
 
   queue: {
     display: 'inline-block',
-    verticalAlign: 'top'
+    verticalAlign: 'top',
+    paddingTop: '4px'
   },
 
   head: {
     display: 'inline-block',
-    height: '32px',
-    marginRight: '10px'
+    height: '26px',
+    marginRight: '4px'
   },
 
   go: {
@@ -100,7 +101,7 @@ const QueueInfo: React.FunctionComponent<QueueInfoProps> =
       let showGreenCrowd = false;
       if (typeof status.total == "number")
       {
-        for(let i=Math.min(status.total, maxQueueShown); i>0; i--)
+        for(let i=1; i <= Math.min(status.total, maxQueueShown); i++)
           queuers.push(i === status.position);
 
         if (status.total > maxQueueShown)
@@ -121,13 +122,13 @@ const QueueInfo: React.FunctionComponent<QueueInfoProps> =
             }
             { status.state === "waiting" &&
               <div className={classes.queue}>
+                { queuers.map((us, i) =>
+                  <img src={us ? headGreen : headGrey} key={i}
+                       className={classes.head} alt="" />  )}
                 { showGreyCrowd &&
                   <img src={crowdGrey} className={classes.head} alt=""/> }
                 { showGreenCrowd &&
                   <img src={crowdGreen} className={classes.head} alt=""/> }
-                { queuers.map((us, i) =>
-                  <img src={us ? headGreen : headGrey} key={i}
-                       className={classes.head} alt="" />  )}
               </div>
             }
             { status.state === "active" &&
