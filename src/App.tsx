@@ -7,6 +7,8 @@ import ImageCarousel from './ImageCarousel';
 import Controls from './Controls';
 import type { QueueStatus, ControlValues } from './Types';
 
+import gwLogo from './graphics/greenwave-logo.png';
+
 // Deploy-specific config, read from public/config.js
 type Config = {
   nexusURL: string;
@@ -61,6 +63,19 @@ const useStyles = makeStyles( (theme) => ({
   {
     marginTop: "5%",
     height: "75%"
+  },
+
+  logo:
+  {
+    position: 'fixed',
+    bottom: '10px',
+    right: '10px',
+    zIndex: 10
+  },
+
+  greenwaveLogo:
+  {
+    width: '96px'
   },
 
   queueCarousel:
@@ -209,6 +224,10 @@ const NexusClient: React.FunctionComponent = () =>
                 Let's go!
               </Button>
             </p>
+
+            <div className={classes.logo}>
+              <a href="https://greenwaveinteractive.com"><img className={classes.greenwaveLogo} src={gwLogo}/></a>
+            </div>
           </>
         }
         { queueStatus.state === "waiting" &&
