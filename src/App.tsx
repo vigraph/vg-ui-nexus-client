@@ -59,12 +59,14 @@ const useStyles = makeStyles( (theme) => ({
 
   welcomeCarousel:
   {
-    height: "80%"
+    marginTop: "5%",
+    height: "75%"
   },
 
   queueCarousel:
   {
-    height: "90%"
+    marginTop: "5%",
+    height: "85%"
   },
 
   "@keyframes zoom":
