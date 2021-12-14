@@ -11,9 +11,12 @@ import { ControlValues } from './Types';
 import hare from './graphics/hare.svg';
 import tortoise from './graphics/tortoise.svg';
 
+const showHelpTime = 5000;
+
 // Explicit styles
 const useStyles = makeStyles({
   controls: {
+    position: "relative",
     fontSize: "24px",
     padding: "10px",
     textAlign: "center",
@@ -36,6 +39,46 @@ const useStyles = makeStyles({
   hare: {
     float: 'right',
     height: '32px'
+  },
+
+  "@keyframes fade":
+  {
+    "0%": {
+      opacity: 0.5
+    },
+    "80%": {
+      opacity: 0.5
+    },
+    "100%": {
+      opacity: 0
+    }
+  },
+
+  help: {
+    position: "absolute",
+    top: "0px",
+    left: "0px",
+    width: "100%",
+    minWidth: "320px",
+    height: "100%",
+    zIndex: 10,
+    pointerEvents: "none",
+    backgroundColor: "black",
+    opacity: 0.5,
+    animation: "$fade 5s",
+    textAlign: "center"
+  },
+
+  helpPattern: {
+    marginTop: "0px"
+  },
+
+  helpColour: {
+    marginTop: "200px"
+  },
+
+  helpSpeed: {
+    marginTop: "175px"
   }
 });
 
@@ -70,11 +113,17 @@ const Controls: React.FunctionComponent<ControlsProps> =
       const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 1 });
       const [pattern, setPattern] = useState(0);
       const [speed, setSpeed] = useState(0);
+      const [helpShown, setHelpShown] = useState(true);
 
       // Send initial values on start
       useEffect( () => {
         updateControls({ pattern: pattern+1, hue: hsva.h, saturation: hsva.s,
                          speed: speed });
+      }, []);
+
+      // Show help at start
+      useEffect( () => {
+        setInterval(() => { setHelpShown(false); }, showHelpTime);
       }, []);
 
       const buttonNames = [ "1", "2", "3", "4", "5" ];
@@ -118,6 +167,13 @@ const Controls: React.FunctionComponent<ControlsProps> =
             <img src={hare} aria-label='Hare'
                  className={classes.hare} alt="fast" />
           </Box>
+          { helpShown &&
+            <div className={classes.help}>
+              <div className={classes.helpPattern}>Choose a pattern</div>
+              <div className={classes.helpColour}>Pick a colour</div>
+              <div className={classes.helpSpeed}>Set the speed</div>
+            </div>
+          }
         </div>
       );
     };
