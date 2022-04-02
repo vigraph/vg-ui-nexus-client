@@ -8,8 +8,8 @@ import Wheel from '@uiw/react-color-wheel';
 import { Pointer } from './ColourWheelPointer';
 import { ControlValues } from './Types';
 
-import hare from './graphics/hare.svg';
-import tortoise from './graphics/tortoise.svg';
+import fastHeart from './graphics/hearts2.svg';
+import slowHeart from './graphics/heart.svg';
 
 const showHelpTime = 5000;
 
@@ -30,13 +30,12 @@ const useStyles = makeStyles({
     maxWidth: "500px"
   },
 
-  tortoise: {
+  slowHeart: {
     float: 'left',
-    marginTop: '2px',
     height: '28px'
   },
 
-  hare: {
+  fastHeart: {
     float: 'right',
     height: '32px'
   },
@@ -74,11 +73,11 @@ const useStyles = makeStyles({
   },
 
   helpColour: {
-    marginTop: "200px"
+    marginTop: "120px"
   },
 
   helpSpeed: {
-    marginTop: "175px"
+    marginTop: "180px"
   }
 });
 
@@ -110,7 +109,7 @@ const Controls: React.FunctionComponent<ControlsProps> =
   ({ updateControls }) =>
     {
       const classes = useStyles();
-      const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 1 });
+      const [hsva, setHsva] = useState({ h: 1, s: 1, v: 100, a: 1 });
       const [pattern, setPattern] = useState(0);
       const [speed, setSpeed] = useState(0);
       const [helpShown, setHelpShown] = useState(true);
@@ -126,21 +125,8 @@ const Controls: React.FunctionComponent<ControlsProps> =
         setInterval(() => { setHelpShown(false); }, showHelpTime);
       }, []);
 
-      const buttonNames = [ "1", "2", "3", "4", "5" ];
       return (
         <div className={classes.controls}>
-          <Box className={classes.control}>
-            {
-              buttonNames.map((name: string, index: number) =>
-                <OurButton variant="contained"
-                        color={index==pattern?"primary":"secondary"}
-                        key={index}
-                        onClick={() => {
-                            setPattern(index);
-                            updateControls({ pattern: index+1 });
-                        }}>{name}</OurButton>)
-            }
-          </Box>
           <Box className={classes.control}>
             <Wheel
               color={hsva}
@@ -162,14 +148,13 @@ const Controls: React.FunctionComponent<ControlsProps> =
                            updateControls({ speed: speed/100 })
                        }}
             />
-            <img src={tortoise} aria-label='Tortoise'
-                 className={classes.tortoise} alt="slow" />
-            <img src={hare} aria-label='Hare'
-                 className={classes.hare} alt="fast" />
+            <img src={slowHeart} aria-label='Slow'
+                 className={classes.slowHeart} alt="slow" />
+            <img src={fastHeart} aria-label='Fast'
+                 className={classes.fastHeart} alt="fast" />
           </Box>
           { helpShown &&
             <div className={classes.help}>
-              <div className={classes.helpPattern}>Choose a pattern</div>
               <div className={classes.helpColour}>Pick a colour</div>
               <div className={classes.helpSpeed}>Set the speed</div>
             </div>
